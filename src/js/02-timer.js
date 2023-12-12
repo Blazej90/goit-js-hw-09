@@ -1,0 +1,104 @@
+import flatpickr from 'flatpickr';
+import 'flatpickr/dist/flatpickr.min.css';
+
+// Inicjalizacja flatpickr
+const datetimePicker = flatpickr('#datetime-picker', {
+  enableTime: true,
+  time_24hr: true,
+  defaultDate: new Date(),
+  minuteIncrement: 1,
+  onClose(selectedDates) {
+    handleDateSelection(selectedDates[0]);
+  },
+});
+
+// Elementy interfejsu
+const startButton = document.querySelector('[data-start]');
+const daysElement = document.querySelector('[data-days]');
+const hoursElement = document.querySelector('[data-hours]');
+const minutesElement = document.querySelector('[data-minutes]');
+const secondsElement = document.querySelector('[data-seconds]');
+
+let countdownInterval;
+
+// Funkcja do formatowania liczby dwucyfrowej
+function formatTwoDigitNumber(number) {
+  return number.toString().padStart(2, '0');
+}
+
+// Funkcja do konwersji milisekund na obiekt z pozostałym czasem
+function convertMs(ms) {
+  const second = 1000;
+  const minute = second * 60;
+  const hour = minute * 60;
+  const day = hour * 24;
+
+  const days = Math.floor(ms / day);
+  const hours = Math.floor((ms % day) / hour);
+  const minutes = Math.floor(((ms % day) % hour) / minute);
+  const seconds = Math.floor((((ms % day) % hour) % minute) / second);
+
+  return { days, hours, minutes, seconds };
+}
+
+// Funkcja dodająca zero do liczby jednocyfrowej
+function addLeadingZero(value) {
+  return value.toString().padStart(2, '0');
+}
+
+// Funkcja obsługująca wybór daty
+function handleDateSelection(selectedDate) {
+  const currentDate = new Date();
+
+  if (selectedDate <= currentDate) {
+    window.alert('Please choose a date in the future');
+    return;
+  }
+
+  startButton.disabled = false;
+}
+
+// Funkcja rozpoczynająca odliczanie
+function startCountdown() {
+  const selectedDate = datetimePicker.selectedDates[0];
+  const currentDate = new Date();
+
+  const timeDifference = selectedDate - currentDate;
+
+  if (timeDifference < 0) {
+    clearInterval(countdownInterval);
+    resetTimer();
+    return;
+  }
+
+  const { days, hours, minutes, seconds } = convertMs(timeDifference);
+
+  // Aktualizacja elementów interfejsu
+  daysElement.textContent = addLeadingZero(days);
+  hoursElement.textContent = addLeadingZero(hours);
+  minutesElement.textContent = addLeadingZero(minutes);
+  secondsElement.textContent = addLeadingZero(seconds);
+}
+
+// Funkcja resetująca licznik
+function resetTimer() {
+  clearInterval(countdownInterval);
+  startButton.disabled = true;
+  daysElement.textContent = '00';
+  hoursElement.textContent = '00';
+  minutesElement.textContent = '00';
+  secondsElement.textContent = '00';
+}
+
+// Obsługa kliknięcia przycisku "Start"
+startButton.addEventListener('click', () => {
+  countdownInterval = setInterval(startCountdown, 1000);
+  startButton.disabled = true;
+});
+
+// Powrót do poprzedniej strony
+const goBackLink = document.querySelector('p a');
+goBackLink.addEventListener('click', () => {
+  resetTimer();
+  datetimePicker.clear();
+});
