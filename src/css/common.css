@@ -16,3 +16,15 @@ img {
   display: block;
   max-width: 100%;
 }
+
+.container-btn-color {
+  display: flex;
+  justify-content: center;
+  padding-top: 7em;
+}
+
+.btn-start-color,
+.btn-stop-color {
+  padding: 10px;
+  margin: 10px;
+}
