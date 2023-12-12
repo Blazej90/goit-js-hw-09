@@ -1,7 +1,6 @@
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
-// Inicjalizacja flatpickr
 const datetimePicker = flatpickr('#datetime-picker', {
   enableTime: true,
   time_24hr: true,
@@ -12,7 +11,6 @@ const datetimePicker = flatpickr('#datetime-picker', {
   },
 });
 
-// Elementy interfejsu
 const startButton = document.querySelector('[data-start]');
 const daysElement = document.querySelector('[data-days]');
 const hoursElement = document.querySelector('[data-hours]');
@@ -21,12 +19,10 @@ const secondsElement = document.querySelector('[data-seconds]');
 
 let countdownInterval;
 
-// Funkcja do formatowania liczby dwucyfrowej
 function formatTwoDigitNumber(number) {
   return number.toString().padStart(2, '0');
 }
 
-// Funkcja do konwersji milisekund na obiekt z pozostałym czasem
 function convertMs(ms) {
   const second = 1000;
   const minute = second * 60;
@@ -41,12 +37,10 @@ function convertMs(ms) {
   return { days, hours, minutes, seconds };
 }
 
-// Funkcja dodająca zero do liczby jednocyfrowej
 function addLeadingZero(value) {
   return value.toString().padStart(2, '0');
 }
 
-// Funkcja obsługująca wybór daty
 function handleDateSelection(selectedDate) {
   const currentDate = new Date();
 
@@ -58,7 +52,6 @@ function handleDateSelection(selectedDate) {
   startButton.disabled = false;
 }
 
-// Funkcja rozpoczynająca odliczanie
 function startCountdown() {
   const selectedDate = datetimePicker.selectedDates[0];
   const currentDate = new Date();
@@ -73,14 +66,12 @@ function startCountdown() {
 
   const { days, hours, minutes, seconds } = convertMs(timeDifference);
 
-  // Aktualizacja elementów interfejsu
   daysElement.textContent = addLeadingZero(days);
   hoursElement.textContent = addLeadingZero(hours);
   minutesElement.textContent = addLeadingZero(minutes);
   secondsElement.textContent = addLeadingZero(seconds);
 }
 
-// Funkcja resetująca licznik
 function resetTimer() {
   clearInterval(countdownInterval);
   startButton.disabled = true;
@@ -90,13 +81,11 @@ function resetTimer() {
   secondsElement.textContent = '00';
 }
 
-// Obsługa kliknięcia przycisku "Start"
 startButton.addEventListener('click', () => {
   countdownInterval = setInterval(startCountdown, 1000);
   startButton.disabled = true;
 });
 
-// Powrót do poprzedniej strony
 const goBackLink = document.querySelector('p a');
 goBackLink.addEventListener('click', () => {
   resetTimer();
