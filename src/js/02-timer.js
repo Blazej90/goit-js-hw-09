@@ -47,10 +47,23 @@ function handleDateSelection(selectedDate) {
   if (selectedDate <= currentDate) {
     window.alert('Please choose a date in the future');
     startButton.disabled = true;
+
+    datetimePicker.clear();
   } else {
     startButton.disabled = false;
   }
 }
+
+datetimePicker.config.onChange.push((selectedDates, dateStr) => {
+  const selectedDate = selectedDates[0];
+  const currentDate = new Date();
+
+  if (selectedDate <= currentDate) {
+    startButton.disabled = true;
+  } else {
+    startButton.disabled = false;
+  }
+});
 
 function startCountdown() {
   const selectedDate = datetimePicker.selectedDates[0];
@@ -82,8 +95,20 @@ function resetTimer() {
 }
 
 startButton.addEventListener('click', () => {
-  countdownInterval = setInterval(startCountdown, 1000);
+  const selectedDate = datetimePicker.selectedDates[0];
+  const currentDate = new Date();
+
+  if (selectedDate <= currentDate) {
+    window.alert('Please choose a date in the future');
+    datetimePicker.clear();
+    startButton.disabled = true;
+    return;
+  }
+
+  startCountdown();
   startButton.disabled = true;
+
+  countdownInterval = setInterval(startCountdown, 1000);
 });
 
 const goBackLink = document.querySelector('p a');
