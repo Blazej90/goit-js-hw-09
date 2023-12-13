@@ -46,10 +46,10 @@ function handleDateSelection(selectedDate) {
 
   if (selectedDate <= currentDate) {
     window.alert('Please choose a date in the future');
-    return;
+    startButton.disabled = true;
+  } else {
+    startButton.disabled = false;
   }
-
-  startButton.disabled = false;
 }
 
 function startCountdown() {
@@ -74,7 +74,7 @@ function startCountdown() {
 
 function resetTimer() {
   clearInterval(countdownInterval);
-  startButton.disabled = false;
+  startButton.disabled = true;
   daysElement.textContent = '00';
   hoursElement.textContent = '00';
   minutesElement.textContent = '00';
