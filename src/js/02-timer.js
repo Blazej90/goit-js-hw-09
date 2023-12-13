@@ -74,7 +74,7 @@ function startCountdown() {
 
 function resetTimer() {
   clearInterval(countdownInterval);
-  startButton.disabled = true;
+  startButton.disabled = false;
   daysElement.textContent = '00';
   hoursElement.textContent = '00';
   minutesElement.textContent = '00';
